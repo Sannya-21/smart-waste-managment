@@ -1,0 +1,332 @@
+{% extends "base.html" %}
+
+{% block title %}Login | Zero2Hero{% endblock %}
+
+{% block head %}
+<style>
+    /* 1. RESET BASE CONFLICTS */
+    .app-container {
+        display: block !important;
+        width: 100% !important;
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+
+    /* 2. AUTH WRAPPER */
+    .auth-wrapper {
+        position: fixed !important;
+        inset: 0 !important;
+        width: 100vw !important;
+        height: 100vh !important;
+        z-index: 9999 !important;
+        overflow: hidden;
+        background-color: #041208;
+    }
+
+    /* 3. BACKGROUND */
+    .eco-bg {
+        position: absolute;
+        inset: 0;
+        background: url('../images/forest-bg.png') no-repeat center center;
+        background-size: cover;
+        z-index: 1;
+        filter: brightness(0.5);
+    }
+
+    .eco-bg::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(circle at center, transparent, rgba(10, 20, 15, 0.9));
+        z-index: 2;
+    }
+
+    /* 4. SPLIT LAYOUT */
+    .split-layout-container {
+        display: flex;
+        width: 100%;
+        height: 100%;
+        position: relative;
+        z-index: 10;
+    }
+
+    .form-panel {
+        flex: 0 0 45%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: rgba(10, 20, 15, 0.6);
+        backdrop-filter: blur(25px);
+        border-right: 1px solid rgba(255, 255, 255, 0.05);
+        padding: 3rem;
+    }
+
+    .visual-panel {
+        flex: 1;
+        position: relative;
+        overflow: hidden;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    /* 5. SHARP 3D TREES (using images) */
+    .trees-layer {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 75%;
+        display: flex;
+        justify-content: space-around;
+        align-items: flex-end;
+        z-index: 5;
+        padding-bottom: 20px;
+    }
+
+    .tree-wrapper {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        transform-origin: bottom center;
+        animation: sharpSway 8s ease-in-out infinite;
+    }
+
+    @keyframes sharpSway {
+        0%, 100% { transform: rotate(0deg); }
+        50% { transform: rotate(1deg); }
+    }
+
+    .tree-img {
+        width: 320px;
+        filter: drop-shadow(0 20px 40px rgba(0,0,0,0.6));
+    }
+
+    /* 6. GLOBAL LEAF STORM */
+    .storm-layer {
+        position: absolute;
+        inset: 0;
+        z-index: 20; /* On top of everything */
+        pointer-events: none;
+    }
+
+    .leaf {
+        position: absolute;
+        width: 14px;
+        height: 10px;
+        background: #2ed573;
+        border-radius: 100% 0 100% 0;
+        opacity: 0.8;
+        animation: globalFall linear infinite;
+    }
+
+    @keyframes globalFall {
+        0% { transform: translate(0, -50px) rotate(0deg); opacity: 0; }
+        10% { opacity: 0.8; }
+        90% { opacity: 0.8; }
+        100% { transform: translate(var(--dx), 110vh) rotate(var(--dr)); opacity: 0; }
+    }
+
+    /* 7. GLASS CARD & DARK INPUTS */
+    .glass-login-card {
+        background: rgba(15, 23, 42, 0.6) !important;
+        backdrop-filter: blur(40px) saturate(180%);
+        border: 1px solid rgba(255, 255, 255, 0.1) !important;
+        padding: 4rem 3rem !important;
+        border-radius: 40px !important;
+        width: 100%;
+        max-width: 440px;
+        box-shadow: 0 40px 100px rgba(0,0,0,0.8) !important;
+    }
+
+    .glass-login-card h1 { 
+        color: white !important; 
+        font-weight: 800; 
+        font-size: 2.8rem !important; 
+        margin-bottom: 0.5rem; 
+        letter-spacing: -1px;
+    }
+    
+    .glass-login-card p { color: rgba(255,255,255,0.6) !important; margin-bottom: 2.5rem; font-size: 1.1rem; }
+
+    .input-group label { color: white !important; display: block; margin-bottom: 0.8rem; font-weight: 600; }
+    
+    /* FORCING SOLID DARK BACKGROUND */
+    .glass-login-card input {
+        background: #0a140a !important; /* Fixed dark color */
+        border: 1px solid rgba(34, 197, 94, 0.2) !important;
+        padding: 1.25rem !important;
+        color: white !important;
+        border-radius: 16px !important;
+        width: 100%;
+        font-size: 1rem !important;
+        margin-bottom: 1.5rem;
+    }
+
+    .glass-login-card input:focus {
+        border-color: #22c55e !important;
+        box-shadow: 0 0 15px rgba(34, 197, 94, 0.4) !important;
+    }
+
+    .glass-login-card .btn {
+        background: linear-gradient(135deg, #10b981, #059669) !important;
+        color: white !important;
+        font-weight: 800 !important;
+        font-size: 1.1rem !important;
+        padding: 1.25rem !important;
+        border: none !important;
+        border-radius: 16px !important;
+        box-shadow: 0 15px 35px rgba(16, 185, 129, 0.4) !important;
+        cursor: pointer;
+        width: 100%;
+    }
+
+    .glass-login-card .btn:hover { transform: translateY(-3px) !important; box-shadow: 0 20px 45px rgba(16, 185, 129, 0.6) !important; }
+
+    /* 8. CENTERED TOP LOGO */
+    .top-center-logo {
+        position: absolute;
+        top: 40px;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        z-index: 100;
+        text-decoration: none;
+    }
+    .top-center-logo i { font-size: 2.5rem; color: #10b981; }
+    .top-center-logo span { font-weight: 800; font-size: 1.8rem; color: #10b981; letter-spacing: -0.5px; }
+
+    /* 9. MIST & ATMOSPHERE */
+    .mist-overlay {
+        position: absolute;
+        bottom: 0; left: 0; right: 0;
+        height: 180px;
+        background: linear-gradient(to top, rgba(8, 15, 12, 0.95), transparent);
+        z-index: 8;
+        backdrop-filter: blur(5px);
+        pointer-events: none;
+    }
+
+    /* 10. RESPONSIVE */
+    @media (max-width: 1100px) {
+        .form-panel { flex: 0 0 100%; }
+        .visual-panel { display: none; }
+    }
+</style>
+{% endblock %}
+
+{% block auth_content %}
+<div class="auth-wrapper">
+    
+    <!-- Cinematic Background -->
+    <div class="eco-bg"></div>
+    
+    <!-- Global Leaf Storm Overlay -->
+    <div id="leafStorm" class="storm-layer"></div>
+
+    <!-- Centered Logo -->
+    <a href="/" class="top-center-logo">
+        <i class="fas fa-leaf"></i>
+        <span>Zero2Hero</span>
+    </a>
+
+    <!-- Main Content Container -->
+    <div class="split-layout-container">
+        
+        <!-- Welcome Form Area -->
+        <div class="form-panel">
+            <div class="glass-login-card">
+                <h1>Welcome Back</h1>
+                <p>Join the circle of sustainability.</p>
+
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        {% for category, message in messages %}
+                            <div style="background: rgba(239, 68, 68, 0.1); color: #ef4444; padding: 1rem; border-radius: 12px; margin-bottom: 2rem; text-align: center; border: 1px solid rgba(239, 68, 68, 0.2);">
+                                {{ message }}
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}
+
+                <form action="{{ url_for('login') }}" method="POST">
+                    <div class="input-group">
+                        <label>Username</label>
+                        <input type="text" name="username" placeholder="eco_warrior" required>
+                    </div>
+                    <div class="input-group">
+                        <div style="display: flex; justify-content: space-between;">
+                            <label>Password</label>
+                            <a href="{{ url_for('forgot_password') }}" style="color: #10b981; text-decoration: none; font-size: 0.85rem;">Forgot?</a>
+                        </div>
+                        <input type="password" name="password" placeholder="••••••••" required>
+                    </div>
+                    <button type="submit" class="btn">Sign In</button>
+                </form>
+
+                <p style="text-align: center; margin-top: 2.5rem; font-size: 0.9rem;">
+                    Don't have an account? <a href="{{ url_for('signup') }}" style="color: #10b981; text-decoration: none; font-weight: 800;">Join now</a>
+                </p>
+            </div>
+        </div>
+
+        <!-- Animated Visual Sidebar -->
+        <div class="visual-panel">
+            <div class="trees-layer">
+                <!-- Sharp Tree 1 -->
+                <div class="tree-wrapper" style="animation-delay: -1s;">
+                    <img src="{{ url_for('static', filename='images/tree-sharp.png') }}" class="tree-img" alt="">
+                </div>
+                <!-- Sharp Tree 2 (Smaller) -->
+                <div class="tree-wrapper" style="transform: scale(0.7); animation-delay: -3s; opacity: 0.7;">
+                    <img src="{{ url_for('static', filename='images/tree-sharp.png') }}" class="tree-img" alt="">
+                </div>
+                <!-- Sharp Tree 3 -->
+                <div class="tree-wrapper" style="animation-delay: -5s;">
+                    <img src="{{ url_for('static', filename='images/tree-sharp.png') }}" class="tree-img" alt="">
+                </div>
+            </div>
+
+            <!-- Ground Mist -->
+            <div class="mist-overlay"></div>
+
+            <!-- Hero Floating Element -->
+            <div style="z-index: 15; position: absolute; top: 40%; left: 50%; transform: translate(-50%, -50%);">
+                <img src="{{ url_for('static', filename='images/eco-elements.png') }}" style="width: 550px; filter: drop-shadow(0 30px 60px rgba(0,0,0,0.7));" alt="">
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    function startLeafStorm() {
+        const container = document.getElementById('leafStorm');
+        const leafCount = 40;
+        
+        for (let i = 0; i < leafCount; i++) {
+            const leaf = document.createElement('div');
+            leaf.className = 'leaf';
+            
+            // Random start across FULL WIDTH
+            leaf.style.left = Math.random() * 100 + 'vw';
+            
+            // Random properties
+            const duration = Math.random() * 8 + 6 + 's';
+            const dx = (Math.random() - 0.5) * 600; // Drift distance
+            const dr = Math.random() * 1000 + 500; // Total rotation
+            
+            leaf.style.setProperty('--dx', dx + 'px');
+            leaf.style.setProperty('--dr', dr + 'deg');
+            leaf.style.animationDuration = duration;
+            leaf.style.animationDelay = Math.random() * 10 + 's';
+            
+            container.appendChild(leaf);
+        }
+    }
+    document.addEventListener('DOMContentLoaded', startLeafStorm);
+</script>
+{% endblock %}

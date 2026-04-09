@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block title %}Report Waste | Zero2Hero{% endblock %}
+
+{% block content %}
+<div style="max-width: 800px; margin: 0 auto;">
+    <div style="margin-bottom: 2.5rem;">
+        <h1 style="font-size: 2rem; font-weight: 800;">Report Waste Area</h1>
+        <p style="color: var(--text-dim);">Spotted an overflow or illegal dumping? Let us know!</p>
+    </div>
+
+    <div class="visual-box" style="padding: 3rem;">
+        <form action="{{ url_for('report') }}" method="POST">
+            <div class="input-group">
+                <label><i class="fas fa-map-marker-alt" style="color: var(--primary); margin-right: 0.5rem;"></i> Location / Address</label>
+                <input type="text" name="location" placeholder="e.g. 123 Main St, Near Central Park" required>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+                <div class="input-group">
+                    <label><i class="fas fa-recycle" style="color: var(--primary); margin-right: 0.5rem;"></i> Waste Type</label>
+                    <select name="type">
+                        <option value="Plastic">Plastic</option>
+                        <option value="Paper">Paper</option>
+                        <option value="Organic">Organic</option>
+                        <option value="Metal">Metal</option>
+                        <option value="Hazardous">Hazardous</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label><i class="fas fa-weight-hanging" style="color: var(--primary); margin-right: 0.5rem;"></i> Estimated Quantity</label>
+                    <select name="quantity">
+                        <option value="Small">Small (Handfuls)</option>
+                        <option value="Medium">Medium (Bag size)</option>
+                        <option value="Large">Large (Truck load)</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label><i class="fas fa-align-left" style="color: var(--primary); margin-right: 0.5rem;"></i> Additional Description</label>
+                <textarea name="description" rows="4" placeholder="Mention specific landmarks or details..."></textarea>
+            </div>
+
+            <div style="background: rgba(34, 197, 94, 0.05); padding: 1.5rem; border-radius: 16px; margin-bottom: 2rem; border: 1px dashed var(--primary);">
+                <p style="font-size: 0.85rem; color: var(--primary); font-weight: 600;">
+                    <i class="fas fa-info-circle"></i> Rewarding Eco-Heroes: Reporting helps us dispatch teams faster. You'll receive 10 bonus points upon submission!
+                </p>
+            </div>
+
+            <button type="submit" class="btn" style="padding: 1.25rem;">Submit Report</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

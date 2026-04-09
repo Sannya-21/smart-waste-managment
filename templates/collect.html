@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block title %}Collect Waste | Zero2Hero{% endblock %}
+
+{% block content %}
+<div style="max-width: 1000px; margin: 0 auto;">
+    <div style="margin-bottom: 2.5rem;">
+        <h1 style="font-size: 2rem; font-weight: 800;">Collect Full Bins</h1>
+        <p style="color: var(--text-dim);">Verify and clear bins that have reached capacity. Help keep the city clean!</p>
+    </div>
+
+    {% if not bins %}
+    <div class="visual-box" style="text-align: center; padding: 5rem;">
+        <span style="font-size: 4rem;">🎉</span>
+        <h2 style="margin-top: 1.5rem; font-weight: 700;">All Bins Clear!</h2>
+        <p style="color: var(--text-dim); margin-top: 0.5rem;">There are currently no bins requiring urgent collection.</p>
+        <a href="{{ url_for('dashboard') }}" class="btn" style="width: auto; margin-top: 2rem; display: inline-block; padding: 1rem 2rem; text-decoration: none;">View Map</a>
+    </div>
+    {% else %}
+    <div class="stats-grid" style="grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));">
+        {% for bin in bins %}
+        <div class="stat-card" style="border-left: 5px solid #ef4444;">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1.5rem;">
+                <div>
+                    <h3 style="font-size: 1.1rem; color: var(--text); font-weight: 700;">{{ bin.name }}</h3>
+                    <p style="font-size: 0.8rem; color: var(--text-dim);"><i class="fas fa-map-marker-alt"></i> {{ bin.lat }}, {{ bin.lng }}</p>
+                </div>
+                <div style="background: rgba(239, 68, 68, 0.1); color: #ef4444; padding: 0.25rem 0.75rem; border-radius: 8px; font-weight: 700; font-size: 0.85rem;">
+                    {{ bin.fill }}% Full
+                </div>
+            </div>
+
+            <div class="progress-container" style="height: 12px; margin-bottom: 2rem;">
+                <div class="progress-bar" style="width: {{ bin.fill }}%; background: #ef4444;"></div>
+            </div>
+
+            <form action="{{ url_for('collect') }}" method="POST">
+                <input type="hidden" name="bin_id" value="{{ bin.id }}">
+                <div class="input-group" style="margin-bottom: 1.5rem;">
+                    <label style="font-size: 0.8rem;">Proof of Collection (Simulation)</label>
+                    <input type="file" disabled style="padding: 0.5rem; font-size: 0.8rem;">
+                </div>
+                <button type="submit" class="btn"><i class="fas fa-check-circle"></i> Mark as Collected</button>
+            </form>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <div class="visual-box" style="margin-top: 2.5rem; background: rgba(59, 130, 246, 0.05); border-color: rgba(59, 130, 246, 0.2);">
+        <h4 style="color: var(--secondary); font-weight: 700; margin-bottom: 0.5rem;"><i class="fas fa-magic"></i> AI Collection Verification</h4>
+        <p style="font-size: 0.9rem; color: var(--text-dim);">When you upload an image, our AI verified the waste removal before awarding your 50 points. This ensures the integrity of the ecosystem.</p>
+    </div>
+</div>
+{% endblock %}

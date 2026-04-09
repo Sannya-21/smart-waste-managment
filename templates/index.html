@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+
+{% block title %}Welcome | Zero2Hero Smart Waste{% endblock %}
+
+{% block auth_content %}
+<div style="min-height: 100vh; display: flex; flex-direction: column;">
+    <!-- NAVBAR (Landing Page Version) -->
+    <nav style="display: flex; justify-content: space-between; align-items: center; padding: 2rem 5%; position: absolute; width: 100%; top: 0; z-index: 100;">
+        <div class="logo-container">
+            <span class="logo-icon">♻️</span>
+            <span class="logo-text">Zero2Hero</span>
+        </div>
+        <div style="display: flex; gap: 2rem; align-items: center;">
+            <a href="{{ url_for('login') }}" style="color: var(--text); text-decoration: none; font-weight: 600;">Sign In</a>
+            <a href="{{ url_for('signup') }}" class="btn" style="width: auto; padding: 0.75rem 1.5rem;">Get Started</a>
+        </div>
+    </nav>
+
+    <!-- HERO SECTION -->
+    <section style="flex: 1; display: flex; align-items: center; padding: 0 10%; margin-top: 5rem;">
+        <div style="flex: 1; animation: slideUp 0.8s ease-out;">
+            <span style="background: rgba(34, 197, 94, 0.1); color: var(--primary); padding: 0.5rem 1.25rem; border-radius: 50px; font-weight: 700; font-size: 0.85rem; letter-spacing: 0.05em; text-transform: uppercase;">
+                Future of Waste Management
+            </span>
+            <h1 style="font-size: 4.5rem; font-weight: 900; line-height: 1.1; margin: 1.5rem 0; background: linear-gradient(to right, var(--text), var(--primary)); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;">
+                Clean Cities.<br><span style="color: var(--primary);">Smart Living.</span>
+            </h1>
+            <p style="font-size: 1.25rem; color: var(--text-dim); max-width: 600px; line-height: 1.6; margin-bottom: 2.5rem;">
+                Empowering citizens and municipalities with real-time AI tracking, rewards for cleaning up, and data-driven waste collection. Join the movement to make our planet zero-waste.
+            </p>
+            <div style="display: flex; gap: 1.5rem;">
+                <a href="{{ url_for('signup') }}" class="btn" style="width: auto; padding: 1.25rem 2.5rem; font-size: 1.1rem; box-shadow: 0 20px 40px rgba(34, 197, 94, 0.3);">
+                    Start Your Mission
+                </a>
+                <a href="#" class="btn" style="width: auto; padding: 1.25rem 2.5rem; font-size: 1.1rem; background: transparent; border: 2.5px solid var(--border-color); color: var(--text);">
+                    Learn More
+                </a>
+            </div>
+        </div>
+
+        <div style="flex: 0.8; display: flex; justify-content: center; position: relative;">
+            <div style="width: 100%; max-width: 500px; height: 500px; background: radial-gradient(circle, rgba(34, 197, 94, 0.2) 0%, transparent 70%); position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);"></div>
+            <span style="font-size: 15rem; animation: float 6s infinite ease-in-out;">🌍</span>
+        </div>
+    </section>
+
+    <!-- STATS -->
+    <div style="padding: 5rem 10%; background: rgba(0,0,0,0.02); display: flex; justify-content: space-around; gap: 2rem;">
+        <div style="text-align: center;">
+            <h2 style="font-size: 2.5rem; font-weight: 800; color: var(--primary);">50k+</h2>
+            <p style="color: var(--text-dim); font-weight: 600;">Active Heroes</p>
+        </div>
+        <div style="text-align: center;">
+            <h2 style="font-size: 2.5rem; font-weight: 800; color: var(--secondary);">200t</h2>
+            <p style="color: var(--text-dim); font-weight: 600;">Waste Diverted</p>
+        </div>
+        <div style="text-align: center;">
+            <h2 style="font-size: 2.5rem; font-weight: 800; color: var(--primary);">15+</h2>
+            <p style="color: var(--text-dim); font-weight: 600;">Smart Cities</p>
+        </div>
+    </div>
+</div>
+
+<style>
+@keyframes float {
+    0%, 100% { transform: translateY(0) rotate(0); }
+    50% { transform: translateY(-30px) rotate(5deg); }
+}
+</style>
+{% endblock %}
